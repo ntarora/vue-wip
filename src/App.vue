@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { EventBus } from './store/event_bus.js'
 export default {
   name: 'App',
   data() {
@@ -32,8 +33,7 @@ export default {
   methods: {
     handleAdd() {
       if (this.inputSymbol.length > 0) {
-        const event = new CustomEvent('add-card', { detail: this.inputSymbol });
-        window.dispatchEvent(event);
+        EventBus.$emit('add-card', this.inputSymbol);
         this.inputSymbol = '';
       }
     },

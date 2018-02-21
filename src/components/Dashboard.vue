@@ -8,7 +8,7 @@
 
 <script>
 import Cards from './Cards.vue';
-
+import { EventBus } from '../store/event_bus.js';
 export default {
   name: 'Dashboard',
   components: {
@@ -20,11 +20,10 @@ export default {
     };
   },
   created() {
-    window.addEventListener('add-card', (e) => {
-      const sym = e.detail;
-      const index = this.stockData.findIndex(item => item === sym);
+    EventBus.$on('add-card', e => {
+      const index = this.stockData.findIndex(item => item === e);
       if (index === -1) {
-        this.stockData.push(sym);
+        this.stockData.push(e);
       } else {
         const h = this.$createElement;
         this.$notify({
@@ -34,14 +33,12 @@ export default {
         });
       }
     });
-    window.addEventListener('delete-card', (e) => {
-      const sym = e.detail;
-      const index = this.stockData.findIndex(item => item === sym);
+    EventBus.$on('delete-card', e => {
+      const index = this.stockData.findIndex(item => item === e);
       this.stockData.splice(index, 1);
     });
-    window.addEventListener('error-card', (e) => {
-      const sym = e.detail;
-      const index = this.stockData.findIndex(item => item === sym);
+   EventBus.$on('error-card', e => {
+      const index = this.stockData.findIndex(item => item === e.symbol);
       this.stockData.splice(index, 1);
       const h = this.$createElement;
       this.$notify({

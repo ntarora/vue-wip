@@ -13,6 +13,13 @@ class Store {
     };
     return rp(options);
   }
+  getStockPrice(symb) {
+    const options = {
+      uri: `${this.config.url}/${symb}/book`,
+      json: true,
+    };
+    return rp(options);
+  }
 }
 
 export default new Store();

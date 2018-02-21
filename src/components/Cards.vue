@@ -1,7 +1,7 @@
 <template>
-	<el-card v-loading="data === null">
-		<div  slot="header" class="header" v-if="data !== null">
-			<span> Stock Price ${{symbol.toUpperCase()}} </span>
+	<el-card v-loading="data === null && currentPrice === null">
+		<div  slot="header" class="header" v-if="data !== null && currentPrice !== null">
+			<span> Stock Price ${{symbol.toUpperCase()}} ({{currentPrice}}) </span>
 			<el-button class="delete-button" type="info" round size="mini"  @click="deleteClicked" icon="el-icon-delete"></el-button>
 		</div>
 		<div slot="header" class="header" v-else>
@@ -21,7 +21,7 @@
 <script>
 import store from '../store';
 import Highcharts from 'highcharts';
-
+import { EventBus } from '../store/event_bus.js'
 export default {
   name: 'Card',
   props: {
@@ -70,19 +70,17 @@ export default {
 			            },
 			        },
 			        series: [{
-			        	name: 'Stock',
+			        	name: 'Stock Price',
 			        	data: timeSeries,
 			        },
 			       ],
 		    	});
       }, (error) => {
-        const event = new CustomEvent('error-card', { detail: this.symbol, error });
-        window.dispatchEvent(event);
+       EventBus.$emit('error-card', { symbol: this.symbol, error });
       });
     },
     deleteClicked() {
-      const event = new CustomEvent('delete-card', { detail: this.symbol });
-      window.dispatchEvent(event);
+      EventBus.$emit('delete-card', this.symbol);
     },
     oneYearClicked() {
       this.changeStockGraph('1y');
@@ -97,9 +95,13 @@ export default {
   data() {
     return {
       data: null,
+      currentPrice: null
     };
   },
   created() {
+  	store.getStockPrice(this.symbol).then(priceData => {
+    	this.currentPrice = priceData.latestPrice;
+   	});
     this.changeStockGraph('1m');
   },
 };
