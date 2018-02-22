@@ -70,7 +70,7 @@ export default {
 
 .add-button {
   float: right;
-  margin: 10px;
+  margin: 10px !important;
 }
 
 </style>

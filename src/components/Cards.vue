@@ -1,7 +1,7 @@
 <template>
 	<el-card v-loading="data === null && currentPrice === null">
 		<div  slot="header" class="header" v-if="data !== null && currentPrice !== null">
-			<span> Stock Price ${{symbol.toUpperCase()}} ({{currentPrice}}) </span>
+			<span> Stock Price ${{symbol.toUpperCase()}} (${{currentPrice}}) </span>
 			<el-button class="delete-button" type="info" round size="mini"  @click="deleteClicked" icon="el-icon-delete"></el-button>
 		</div>
 		<div slot="header" class="header" v-else>
@@ -100,7 +100,7 @@ export default {
   },
   created() {
   	store.getStockPrice(this.symbol).then(priceData => {
-    	this.currentPrice = priceData.latestPrice;
+    	this.currentPrice = priceData.quote.latestPrice.toFixed(2);
    	});
     this.changeStockGraph('1m');
   },
@@ -113,6 +113,7 @@ export default {
 	grid-column-end: 1;
 	grid-row-start: 1;
 	grid-row-end: 1;
+	display: grid;
 }
 .card-body {
 	display: grid;
@@ -133,6 +134,6 @@ export default {
 	float: right;
 }
 .date-button {
-	margin: 30px 30px 30px 10px;
+	margin: 30px 30px 30px 10px !important;
 }
 </style>
