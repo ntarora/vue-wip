@@ -8,7 +8,7 @@
         title="Add Card"
         :visible.sync="dialogVisible"
         width="50%">
-        <el-input v-model="inputSymbol" placeholder='enter symbol'/>
+        <el-input v-model="inputSymbol" placeholder='enter symbol' @keyup.enter.native="dialogVisible = false; handleAdd()"/>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="dialogVisible = false; handleAdd()">Confirm</el-button>
           <el-button @click="dialogVisible = false">Cancel</el-button>
